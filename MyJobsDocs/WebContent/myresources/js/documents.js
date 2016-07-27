@@ -486,7 +486,7 @@ function selectPhoto(){
 	);
 }
 function showFile(file){
-	alert(file)
+	
 	window.plugins.fileOpener.open(file)
 	//window.open(file, "_blank", 'location=yes,closebuttoncaption=Return') 
 	
@@ -531,7 +531,7 @@ function buildDocumentList(){
 	var	docsTabBar  = new sap.m.IconTabBar('DocumentsTabBar',
 				{
 					expanded:'{device>/isNoPhone}',
-
+					expandable:false,
 					select:[function(oEvt) {	
 						
 						  if(oEvt.getParameters().key=="Global"){
@@ -749,7 +749,7 @@ function errorMoveCallback(error) {
     
 }
 function onDirectorySuccess(parent) {
-    alert(" Directory created successfuly")
+   
 }
 
 function onDirectoryFail(error) {
@@ -1124,7 +1124,7 @@ function downloadAll()
     	filesToDownload=data;
         var cnt = 0;
         st=getFormattedTime()
-        alert(filesToDownload.FILES.length)
+       
     	if(filesToDownload.FILES.length>0){
     		fileDownloadCnt=0;
     		
@@ -1252,8 +1252,7 @@ function checkFileDownload () {
 		       fileName = filesToDownload[fileDownloadCnt].name;
 		       if(fileDownloadCnt==10){
 
-		       alert(filesToDownload[fileDownloadCnt].name)
-		       alert(filesToDownload[fileDownloadCnt].url+"/")
+		      
 		       }
 		        window.resolveLocalFileSystemURL(DeviceStorageDirectory+filesToDownload[fileDownloadCnt].url+"/"  + filesToDownload[fileDownloadCnt].name, appStart, downloadAllAsset(filesToDownload[fileDownloadCnt].name, filesToDownload[fileDownloadCnt].url+"/"));
 		       fileDownloadCnt++;
@@ -1347,7 +1346,6 @@ function downloadLiveLinkFile(fileName,dir,node,drawid) {
 function downloadAsset1(fileName) {
     var fileTransfer = new FileTransfer();
     x=fileName.split("/")
-    alert("About to start transfer " + localStorage.getItem("DOCSERVER")+  fileName + " to " + cordova.file.dataDirectory  + x[3]);
     fileTransfer.download(localStorage.getItem("DOCSERVER") + fileName, cordova.file.externalApplicationStorageDirectory+ x[3],
 		function (entry) {
 		    //alert("xx"+cordova.file.dataDirectory  + x[3]+":::"+entry.fullPath)
