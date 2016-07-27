@@ -1,0 +1,548 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<!-- <meta http-equiv="Access-Control-Allow-Origin" content="*"/> -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+
+<title>MyJobs - Home</title>
+<style>
+.largeFont{
+font-size: 150%;
+}
+.inAppBrowserWrap {
+  background-color: rgba(0,0,0,0.75);
+  color: rgba(235,235,235,1.0);
+}
+.inAppBrowserWrap menu {
+  overflow: auto;
+  list-style-type: none;
+  padding-left: 0;
+}
+.inAppBrowserWrap menu li {
+  font-size: 25px;
+  height: 25px;
+  float: left;
+  margin: 0 10px;
+  padding: 3px 10px;
+  text-decoration: none;
+  color: #ccc;
+  display: block;
+  background: rgba(30,30,30,0.50);
+}
+.inAppBrowserWrap menu li.disabled {
+    color: #777;
+    }
+						#pressedTile {
+				enabled: false;
+				color: red;
+				
+			}
+</style>
+
+
+<script src="resources/sap-ui-core.js" type="text/javascript"
+	id="sap-ui-bootstrap" data-sap-ui-libs="sap.m,sap.ui.commons"
+	data-sap-ui-theme="sap_bluecrystal">
+	
+</script>
+<script type="text/javascript" src="cordova.js"></script>
+<script src="myresources/js/jscoord-1.1.1.js"></script> 
+<script src="myresources/js/html5sql.js"></script>  
+<script src="myresources/js/aes.js"></script>  
+<script src="myresources/js/html5sql.js"></script>  
+<script src="myresources/js/bgsync.js"></script>
+<script src="myresources/js/MyJobsDB.js"></script>
+<script src="myresources/js/MyJobsUtils.js"></script>
+<script src="myresources/js/NewNotif.js"></script>
+<script src="myresources/js/webPage.js"></script>
+
+<script src="myresources/js/documents.js"></script>
+
+
+<script type="text/javascript">
+jQuery.sap.require("sap.m.MessageBox");
+html5sql.openDatabase("com.pjo.myjobsdocuments","myjobsdocuments", 10*1024*1024);	
+
+
+
+
+jQuery.sap.require("sap.m.MessageBox");
+var LogState;
+var TotalOrdersCnt=0;
+var TotalNotificationsCnt=0;
+var EmployeeID = localStorage.getItem("EmployeeID")
+var OrdersCnt=0
+var NotificationsCnt=0
+
+var selectedMenuItem=""
+ // initialize variable
+
+var dispLog = 							new sap.m.Button("displayLog", {
+    text: "Display Log",
+    tap: [ function(oEvt) {		  
+		displayLog()
+		  } ]
+})
+
+function addLogToDisplay(type, dt, message) {
+	var mess = new sap.m.MessagePopoverItem({
+		type: type,
+		title: dt,
+		description: message
+	});
+	oMessagePopover.addItem(mess)
+	
+
+	var oObjectMessage = {
+		type: mess.getType(),
+		title: mess.getTitle() || 'Empty',
+		description: mess.getDescription()
+	};
+
+
+}
+var formDocServer = new sap.m.Dialog("dlgDocServer",{
+    title:"Select Document Server",
+    modal: true,
+    contentWidth:"1em",
+    buttons: [
+				   
+				new sap.m.Button({
+				    text: "Cancel",
+				    type: 	sap.m.ButtonType.Reject,
+				    tap: [ function(oEvt) {		  
+						 
+				    	formDocServer.close()
+						  } ]
+				}),
+				new sap.m.Button({
+				    text: "Save",
+				    type: 	sap.m.ButtonType.Accept,
+				    tap: [ function(oEvt) {		  
+				    	
+				    	updateDocServer(sap.ui.getCore().getElementById('CurrentDocServer').getValue())
+				    	formDocServer.close()
+						  } ]
+				})
+				],					
+    content:[
+ 			new sap.ui.layout.form.SimpleForm({
+				minWidth : 1024,
+				maxContainerCols : 2,
+				content : [
+new sap.m.Label({text:"Documents Server"}),
+new sap.m.Input("CurrentDocServer",{type: sap.m.InputType.Input}),
+
+									 
+					
+			               
+			                 
+						]
+ 					})
+
+            ],
+beforeOpen:function(){
+	
+	sap.ui.getCore().getElementById('CurrentDocServer').setValue(localStorage.getItem('DOCSERVER'));
+
+  }
+ })
+var formSettings = new sap.m.Dialog("dlgSettings",{
+    title:"Settings 2016-05-08",
+    modal: true,
+    contentWidth:"1em",
+    buttons: [
+  
+				new sap.m.Button("Cancel", {
+				    text: "Cancel",
+				    type: 	sap.m.ButtonType.Reject,
+				    tap: [ function(oEvt) {		  
+						 
+				    	formSettings.close()
+						  } ]
+				})
+				],					
+    content:[
+ 			new sap.ui.layout.form.SimpleForm({
+				minWidth : 1024,
+				maxContainerCols : 2,
+				content : [
+				           new sap.m.Label({text:""}),
+							new sap.m.Button( {
+							    text: "Select Document Server",
+							    type: 	sap.m.ButtonType.Accept,
+							    tap: [ function(oEvt) {		  
+									 
+							    	formSettings.close()
+							    	formDocServer.open()
+							    	
+									  } ]
+							}),
+
+							
+
+					        new sap.m.Label({text:""}),
+							new sap.m.Button("Synchronise", {
+							    text: "Synchronise",
+							    type: 	sap.m.ButtonType.Accept,
+							    tap: [ function(oEvt) {		  
+									 
+							    	formSettings.close()
+							    	formDownloadFiles.open()
+									  } ]
+							}),
+							
+							new sap.m.Label({text:""}),
+							new sap.m.Button("DisplayLog", {
+							    text: "Display Log",
+							    type: 	sap.m.ButtonType.Emphasized,
+							    tap: [ function(oEvt) {		  
+									 
+							    	
+							    	window.location.href="DisplayLog.html"
+									  } ]
+							}),
+							new sap.m.Label({text:""}),
+							new sap.m.Button("DBReset", {
+							    text: "DB Reset",
+							    type: 	sap.m.ButtonType.Reject,
+							    tap: [ function(oEvt) {		  
+									 
+							    	formSettings.close()
+							    	formDBReset.open();
+									  } ]
+							}),
+
+							
+
+									 
+					
+			               
+			                 
+						]
+ 					})
+
+            ]
+ }).addStyleClass("sapUiSizeCompact");
+
+var formConfig = new sap.m.Dialog("dlgConfig",{
+    title:"Sync Config",
+    modal: true,
+    contentWidth:"1em",
+    buttons: [
+				new sap.m.Button("dlgConfigSave", {
+				    text: "Save",
+				    type: 	sap.m.ButtonType.Accept,
+				   tap: [ function(oEvt) {		
+						if(sap.ui.getCore().getElementById('configLogState').getState()){
+							SetConfigParam("TRACE", 'ON');
+						}else{
+							SetConfigParam("TRACE", 'OFF');
+						}
+					    
+						SetConfigParam("SYNC_REFERENCE_FREQUENCY", sap.ui.getCore().getElementById('configReferenceFrequency').getValue());
+						SetConfigParam("SYNC_TRANSACTIONAL_FREQUENCY", sap.ui.getCore().getElementById('configTransactionalFrequency').getValue());
+						SetConfigParam("SYNC_UPLOAD_FREQUENCY",sap.ui.getCore().getElementById('configUploadFrequency').getValue());
+						SetConfigParam("SERVERNAME",sap.ui.getCore().getElementById('configServer').getValue());
+						SetConfigParam("SAPCLIENT",sap.ui.getCore().getElementById('configSAPClient').getValue());
+						SetConfigParam("SAPSYSTEM",sap.ui.getCore().getElementById('configSAPSystem').getValue());
+
+						
+					   
+					   formConfig.close()} ]
+				}),   
+				new sap.m.Button("dlgConfigCancel", {
+				    text: "Cancel",
+				    type: 	sap.m.ButtonType.Reject,
+				    tap: [ function(oEvt) {		  
+						 
+				    	formConfig.close()
+						  } ]
+				})
+				],					
+    content:[
+ 			new sap.ui.layout.form.SimpleForm({
+				minWidth : 1024,
+				maxContainerCols : 2,
+				content : [
+							
+			                new sap.m.Label({text:"Server"}),
+							new sap.m.Input("configServer",{type: sap.m.InputType.Input}),
+							new sap.m.Label({text:"SAP System (RFC Name)"}),
+							new sap.m.Input("configSAPSystem",{type: sap.m.InputType.Input}),
+			                new sap.m.Label({text:"SAP Client"}),
+							new sap.m.Input("configSAPClient",{type: sap.m.InputType.Input}),
+							new sap.m.Label({text:"Sync Reference Frequency"}),
+							new sap.m.Input("configReferenceFrequency",{type: sap.m.InputType.Input}),
+					        new sap.m.Label({text:"Sync Transactional Frequency"}),
+							new sap.m.Input("configTransactionalFrequency",{type: sap.m.InputType.Input}),
+							new sap.m.Label({text:"Sync Upload Frequency"}),
+							new sap.m.Input("configUploadFrequency",{type: sap.m.InputType.Input}),
+							new sap.m.Label({text:"Logging"}),
+							new sap.m.Switch('configLogState',{
+								state: true,
+								type: sap.m.SwitchType.AcceptReject
+							}),
+							new sap.m.Button("deleteLog", {
+							    text: "Delete",
+							    type: 	sap.m.ButtonType.Reject,
+							    tap: [ function(oEvt) {		  
+									DeleteLog()
+									  } ]
+							})
+
+									 
+					
+			               
+			                 
+						]
+ 					})
+
+            ]
+ })
+
+ 
+
+var formDBReset = new sap.m.Dialog("dlgDBReset",{
+    title:"Database Reset are you sure?",
+    modal: true,
+    contentWidth:"1em",
+    buttons: [
+				new sap.m.Button("dlgDBResetYes", {
+				    text: "Yes",
+				    type: 	sap.m.ButtonType.Accept,
+				    tap: [ function(oEvt) {		  
+				    	
+				    	formDBReset.close()
+				    	resetTables() 
+						  } ]
+				}),
+				new sap.m.Button("dlgDBReseCancel", {
+				    text: "No",
+				    type: 	sap.m.ButtonType.Reject,
+				    tap: [ function(oEvt) {		  
+						 
+				    	formDBReset.close()
+						  } ]
+				})
+				],					
+
+content:[
+
+        
+ 
+         
+         ]
+ })
+localStorage.setItem("DeviceType","xx")
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+	try{
+		
+		DeviceStorageDirectory=cordova.file.externalApplicationStorageDirectory
+		AppDocDirectory="MyJobs"
+		if(device.platform=="iOS"){
+			DeviceStorageDirectory=cordova.file.dataDirectory
+			AppDocDirectory="documents/MyJobs"
+		}
+		localStorage.setItem("DeviceType",device.platform)
+	 }catch(err){
+		 localStorage.setItem("DeviceType","WINDOWS")
+		
+	 }
+
+}
+  
+
+function showSystemMessage(){
+	html5sql.process("SELECT * FROM mymessages  where type = 'MYJOBSSYSMSG'  ;",
+			 function(transaction, results, rowsArray){
+				
+				if (rowsArray.length>0) {			
+					showMessage(rowsArray[0].msgsubject)
+						
+				 }
+
+			 },
+			 function(error, statement){
+				 //outputLogToDB(); 
+			 }        
+			);	
+}
+function showMessage(msg){
+	sap.m.MessageToast.show(msg, {
+		type: Error,
+		duration: Number(10000),
+		width: "50em",
+		my: "center bottom",
+		at: "center bottom",		
+		autoClose: true,
+
+	});
+
+}
+
+function showMessageMiddle(msg){
+	x=msg.split(":")
+	sap.m.MessageToast.show(unescape(mpointlt[parseInt(x[1])]), {
+		type: Error,
+		duration: Number(2000),
+		width: "50em",
+		my: "center center",
+		at: "center center",		
+		autoClose: true,
+
+	});
+
+}
+
+var tileContainer = new sap.m.TileContainer({
+	tiles:
+		[
+		
+		new sap.m.StandardTile('Files',
+				{
+			title:"Documents",
+			icon:"sap-icon://documents",
+			
+			press:[ function(){formDocuments.open()}]
+		
+		
+		}),
+		
+		]
+		
+});
+
+var page  = new sap.m.Page('homePage',{
+	title:"MyJobs - Documents",  
+	showSubHeader: true,
+	subHeader:new sap.m.Bar ("HomeMenu",
+			{
+				id : 'ch12',
+				contentLeft : [],
+				contentRight : [
+
+					       		new sap.m.Button("Settings", {
+					       			 
+					       			 icon:"sap-icon://settings",
+					       				 press: [ function(){
+					       					 loadSettings();
+					       					 sap.ui.getCore().byId("dlgSettings").open(); ;
+					       						}]
+					       			 })
+						],
+				
+			contentMiddle: []
+			}),
+	footer:new sap.m.Bar (
+			{
+				id : 'master-footer',
+				contentLeft : [],
+				
+			contentMiddle: [new sap.m.Button("LastSyncMess", {
+      			 text:"",
+      			 icon:"sap-icon://synchronize",
+      				 press: [ function(){
+      					formDownloadFiles.open()
+      						}]
+      			 }),
+      			new sap.m.BusyIndicator("syncIndicator",{
+					
+					visible:false
+					
+				})]
+			}),
+    content: [tileContainer,new sap.m.Label({text:"xxxxx"})],enableScrolling:false,showNavButton: "{device>/isPhone}" });
+
+var app = new sap.m.App();
+
+app.setInitialPage(page.getId());	
+	
+
+
+page.placeAt("body");
+
+</script>
+</head>
+<body id="body" class="sapUiBody">
+
+<Script>
+
+
+var busycreateDB = new sap.m.BusyDialog('busycreateDB',{text:'Createing the Database', title: 'Database',
+	onAfterRendering:function(){
+	
+	}
+})
+function httpGet(theUrl)
+{
+  var xmlHttp = null;
+
+  xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", theUrl, false );
+  xmlHttp.send( );
+  return xmlHttp.responseText;
+}
+function loadSettings(){
+	   //sap.ui.getCore().byId("Server").setValue(localStorage.getItem("Server"))
+	   //sap.ui.getCore().byId("User").setValue(localStorage.getItem("User"))
+	   //sap.ui.getCore().byId("Holiday").setValue(localStorage.getItem("Holiday"))
+	   //sap.ui.getCore().byId("Sick").setValue(localStorage.getItem("Sick"))
+	   //if(localStorage.getItem("Trace")=="ON"){
+	//	   sap.ui.getCore().byId("LogState").setState(true)
+	 //  }else{
+	//	   sap.ui.getCore().byId("LogState").setState(false)
+	 //  }
+
+
+}
+$(function() {
+
+		  
+	
+    		
+	
+	
+	html5sql.process(
+			["SELECT * FROM sqlite_master WHERE type='table';"],
+			function(transaction, results, rowsArray){
+				
+				if( rowsArray.length <10) {
+					
+					busycreateDB.open()
+					
+					createDB(1)
+						
+
+					
+					}else{
+						//goto Home
+						
+						
+					}
+				
+
+			},
+			 function(error, statement){
+				 
+			 }   
+		);
+	
+	});
+
+	
+
+
+   
+     
+   
+   
+
+
+</script>
+
+</body>
+</html>
