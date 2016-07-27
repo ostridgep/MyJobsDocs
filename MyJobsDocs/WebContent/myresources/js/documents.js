@@ -509,7 +509,7 @@ var formDocuments = new sap.m.Dialog("dlgDocuments",{
                                 })
                                 ],                                
     content:[
-buildDocumentList()
+//buildDocumentList()
     
             ],
             beforeOpen:function(){
@@ -567,8 +567,11 @@ function buildDocumentList(){
 		    	        												if(evt.getParameter("listItem").getCells()[2].getText()==""){
 		    	        													
 		    	        													buildGlobalDownloads(evt.getParameter("listItem").getCells()[5].getText())
+		    	        													this.removeSelections()
 		    	        												}else{
+		    	        													
 		    	        													showFile(evt.getParameter("listItem").getCells()[5].getText())
+		    	        													this.removeSelections()
 		    	        												}
 	    	        													
 	    	        												
