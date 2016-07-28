@@ -145,7 +145,6 @@ function deleteAllDocs()
 }
 function updateDocumemntsTable(url, name,type,size,lastmod)
 {
-
 	
 	sqlStatement=
 	
