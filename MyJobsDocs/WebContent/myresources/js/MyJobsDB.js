@@ -109,7 +109,7 @@ function GetConfigParam(paramName){
 function updateDocServer(docserver){
 
 	opMessage("Setting DocServer = "+docserver);
-	html5sql.process("UPDATE MyUserDets set docserver = '"+docserver+"' Where user = '"+localStorage.getItem("MobileUser")+"';",
+	html5sql.process("UPDATE MyUserDets set docserver = '"+docserver+"';",
 	 function(){
 		localStorage.setItem("DOCSERVER",docserver)
 	 },
@@ -234,8 +234,10 @@ function createTables(type) {
 
 	//opMessage("Creating The Tables");	
         
-		sqlstatement='CREATE TABLE IF NOT EXISTS LogFile    			( id integer primary key autoincrement, datestamp TEXT, type TEXT, message TEXT,recordupdated TIMESTAMP DATETIME DEFAULT(STRFTIME(\'%Y-%m-%d %H:%M:%f\', \'NOW\')));'+
-		 'CREATE TABLE IF NOT EXISTS MyJobsDocs			    ( id integer primary key autoincrement, url TEXT, name TEXT, type TEXT, size TEXT, lastmod TEXT, status TEXT,recordupdated TIMESTAMP DATETIME DEFAULT(STRFTIME(\'%Y-%m-%d %H:%M:%f\', \'NOW\')));'+
+		var sqlstatement='CREATE TABLE IF NOT EXISTS LogFile    			( id integer primary key autoincrement, datestamp TEXT, type TEXT, message TEXT,recordupdated TIMESTAMP DATETIME DEFAULT(STRFTIME(\'%Y-%m-%d %H:%M:%f\', \'NOW\')));'+
+		 'CREATE TABLE IF NOT EXISTS MyUserDets             ( id integer primary key autoincrement,  docserver TEXT,recordupdated TIMESTAMP DATETIME DEFAULT(STRFTIME(\'%Y-%m-%d %H:%M:%f\', \'NOW\')));'+
+
+		'CREATE TABLE IF NOT EXISTS MyJobsDocs			    ( id integer primary key autoincrement, url TEXT, name TEXT, type TEXT, size TEXT, lastmod TEXT, status TEXT,recordupdated TIMESTAMP DATETIME DEFAULT(STRFTIME(\'%Y-%m-%d %H:%M:%f\', \'NOW\')));'
 
 		
 		html5sql.process(sqlstatement,
@@ -253,6 +255,8 @@ function createTables(type) {
 							
 						 },
 						 function(error, statement){
+
+							 alert("Error: " + error.message + " when create processing " + statement);
 							
 							 opMessage("Error: " + error.message + " when create processing " + statement);
 							
@@ -339,8 +343,8 @@ function dropTables() {
 
 
 		sqlstatement=	'DROP TABLE IF EXISTS LogFile;'+
-					
-					'DROP TABLE IF EXISTS  MyJobsDocs;'
+						'DROP TABLE IF EXISTS MyUserDets;'+
+						'DROP TABLE IF EXISTS  MyJobsDocs;'
 						html5sql.process(sqlstatement,
 						 function(){
 							 //alert("Success dropping Tables");
@@ -353,15 +357,15 @@ function dropTables() {
 function emptyTables(type) { 
 	
 		sqlstatement=	'DELETE FROM  LogFile;'+
-						
-					'DELETE FROM  MyJobsDocs;'
+						'DELETE FROM   MyUserDets;'+				
+						'DELETE FROM  MyJobsDocs;'
 						
 						
 
 						html5sql.process(sqlstatement,
 						 function(){
 							
-							 window.location.href="index.html"	
+							 
 							
 						
 							
@@ -372,12 +376,14 @@ function emptyTables(type) {
 							 opMessage("Error: " + error.message + " when delete processing " + statement);
 						 }        
 				);
+		busycreateDB.close();
 }
 
 function resetTables() { 
 	var sqlstatement="";
 
 	sqlstatement=	'DELETE FROM  LogFile;'+
+					'DELETE FROM   MyUserDets;'+
 					'DELETE FROM  MyJobsDocs;'
 					
 					
