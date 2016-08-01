@@ -122,7 +122,26 @@ function updateDocServer(docserver){
 }
 
 
+function updateDocumemntsStatus(url,name,type,size,lastmod,status)
+{
 
+	
+	sqlStatement="UPDATE MyJobsDocs SET status='"+status+"';"
+	sqlMyJobsDocs="";	
+	html5sql.process(sqlStatement,
+		 function(){
+		
+				if(url=="*"){
+					alert("All Docs set to delete")
+					BuildDocumentsTable()
+				}
+		 },
+		 function(error, statement){
+			 alert("Error: " + error.message + " when FormsResponses processing " + statement);
+			opMessage("Error: " + error.message + " when FormsResponses processing " + statement);
+		 }        
+		);
+}
 
 function deleteAllDocs()
 {

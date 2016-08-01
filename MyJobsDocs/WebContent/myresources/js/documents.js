@@ -1122,12 +1122,12 @@ function downloadAll()
 	percentagedownloaded=0;
 	filesToDownload = [];
 	
-    //$.getJSON(localStorage.getItem("DOCSERVER")+'ListDirjson1.php?directory=MyJobs/Global/download', function (data) {
-    	$.getJSON(localStorage.getItem("DOCSERVER"), function (data) {    
+    $.getJSON(localStorage.getItem("DOCSERVER")+'ListDirjson1.php?directory=MyJobs/Global/download', function (data) {
+    	//$.getJSON(localStorage.getItem("DOCSERVER"), function (data) {    
     	filesToDownload=data;
         var cnt = 0;
         st=getFormattedTime()
-       
+       alert(filesToDownload.FILES.length)
     	if(filesToDownload.FILES.length>0){
     		fileDownloadCnt=0;
     		
@@ -1143,7 +1143,7 @@ function downloadAll()
        
         
     }).success(function() { 
-    	
+    	alert("success")
     	})
     .error(function() { 
     	alert("error"); 
