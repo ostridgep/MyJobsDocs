@@ -512,7 +512,7 @@ $(function() {
 			["SELECT * FROM sqlite_master WHERE type='table';"],
 			function(transaction, results, rowsArray){
 				
-				if( rowsArray.length <10) {
+				if( rowsArray.length <5) {
 					
 					busycreateDB.open()
 					
