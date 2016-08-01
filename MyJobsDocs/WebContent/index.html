@@ -520,7 +520,9 @@ new sap.m.IconTabBar('DocumentsTabBar',
 	            								           	     ]
 	            								           	  
 
-	            									})
+	            									}).onAfterRendering = function(){
+	            										buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
+	            							 		};
 	            									]
 	            						           	  
 	            					    }),
