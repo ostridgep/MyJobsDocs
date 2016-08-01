@@ -90,57 +90,12 @@ var formDownloadFiles = new sap.m.Dialog("dlgDownloadFiles",{
 		            },
 		            afterClose:function(){
 
-		            	buildDocumentTables();	
+		            	buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
 		    	
 		            }
 		 })
 
-	var formDisplayPhoto = new sap.m.Dialog("dlgDisplayPhoto",{
-	    title:"Display Photo",
-	    modal: true,
-	    contentWidth:"1em",
-	    buttons: [
-	   
-					new sap.m.Button( {
-					    text: "Test",
-					    type: 	sap.m.ButtonType.Reject,
-					    tap: [ function(oEvt) {		  
-							 
-					    	formDisplayPhoto.close()
-							  } ]
-					}),
-					new sap.m.Button( {
-					    text: "Cancel",
-					    type: 	sap.m.ButtonType.Reject,
-					    tap: [ function(oEvt) {		  
-							 
-					    	formDisplayPhoto.close()
-							  } ]
-					})
-					],					
-	    content:[
-				new sap.m.Image("img1",{
-					src: selectedPhoto,
-					width: "50px",
-					height: "50px"
-				}),
-				new sap.m.Image("Ig22",{
-					src: "images/Worker.jpg",
-					width: "50px",
-					height: "50px"
-				}),
-				new sap.m.Image("Ig3",{
-					src: "xWorker.jpg",
-					width: "50px",
-					height: "50px"
-				})
 
-	            ],
-	            
-	            beforeOpen:function(){
-	            	buildPhotoDetails()
-	            }
-	 })
 
 
 function win(r) {
@@ -161,122 +116,11 @@ function showFile(file){
 	//window.open(file, "_blank", 'location=yes,closebuttoncaption=Return') 
 	
 }
-var formDocuments = new sap.m.Dialog("dlgDocuments",{
-    title:"Documents",
-    modal: true,
-    contentWidth:"1em",
-    buttons: [
- 
-  
-                               
-                                new sap.m.Button( {
-                                	icon:"sap-icon://sys-cancel",
-                                    text: "Cancel",
-                                    type: 	sap.m.ButtonType.Reject,
-                                    tap: [ function(oEvt) {         
-                                               
-                                    	formDocuments.close()} ]   
-                                })
-                                ],                                
-    content:[
-//buildDocumentList()
-    
-            ],
-            beforeOpen:function(){
-            	buildDocumentTables()
-            	//buildPhotoList();
+
             	
-            },
-           contentWidth:"90%",
-        	contentHeight: "90%",
-     })
-
-function buildDocumentList(){
-	var asset_id=""
-	var asset_name=""
-	var asset_type=""
-	
-	
-	
-	var	docsTabBar  = new sap.m.IconTabBar('DocumentsTabBar',
-				{
-					expanded:'{device>/isNoPhone}',
-					expandable:false,
-					select:[function(oEvt) {	
-						
-						  if(oEvt.getParameters().key=="Global"){
-							  //oDetailPage.setFooter(detailFooter)
-							  }
-						  if(oEvt.getParameters().key=="Download"){
-							  //oDetailPage.setFooter(detailFooter)
-							  }
-						  if(oEvt.getParameters().key=="Upload"){
-							  //oDetailPage.setFooter(detailFooter)
-							  }
-						  if(oEvt.getParameters().key=="Photos"){
-							  //oDetailPage.setFooter(materialFooter)
-							  }
-						  
-						}
-					],
-					
-					items: [
 
 	
-	    	                new sap.m.IconTabFilter( {
-	    	            	    key:'DocumentsGlobal',
-	    	            	    tooltip: 'Global Documents',
-	    	            	    icon: "sap-icon://documents",
-	    	            	       	                   content:[
-	    	            	       	        	               
-	    	            									new sap.m.Table("DocumentsGlobalTable",{
-	    	            										
-	    	            										mode: sap.m.ListMode.SingleSelectMaster,
-	    	        											selectionChange: function(evt){
-	    	        												
-		    	        												if(evt.getParameter("listItem").getCells()[2].getText()==""){
-		    	        													
-		    	        													buildGlobalDownloads(evt.getParameter("listItem").getCells()[5].getText())
-		    	        													this.removeSelections()
-		    	        												}else{
-		    	        													
-		    	        													showFile(evt.getParameter("listItem").getCells()[5].getText())
-		    	        													this.removeSelections()
-		    	        												}
-	    	        													
-	    	        												
-	    	        										    },
-	    	            										columns:[
-	    	            										         new sap.m.Column({header: new sap.m.Label({text:""}),
-	    	            										        	 hAlign: 'Left',width: '5%', minScreenWidth : "" , demandPopin: false}),
-	    	            										         new sap.m.Column({header: new sap.m.Label({text:"Finename"}),
-	    	            										        	 hAlign: 'Left',width: '35%', minScreenWidth : "" , demandPopin: false}),
-	    	            										         new sap.m.Column({header: new sap.m.Label({text:"Type"}),
-	    	            										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),
-	    	            										         new sap.m.Column({header: new sap.m.Label({text:"Size"}),
-	    	            										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),	    	            										        	 
-	    	            										         new sap.m.Column({header: new sap.m.Label({text:"Last Modified"}),
-	    	            										        	 hAlign: 'Left',width: '30%',minScreenWidth : "" , demandPopin: true }) ,
-	    	            										        	 new sap.m.Column({header: new sap.m.Label({text:"Path"}),
-		    	            										        	 hAlign: 'Left',width: '0%', minScreenWidth : "" , visible:false, demandPopin: false})    
-	    	            								           	     ]
-	    	            								           	  
 
-	    	            									})
-	    	            									]
-	    	            						           	  
-	    	            					    }),
-    
-	       	                ]
-
-				});
-	return docsTabBar
-}
-function buildDocumentTables(){
-	buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
-
-	
-}
 
 function successMoveCallback(entry) {
  alert("New Path: " + entry.fullPath);
@@ -298,7 +142,7 @@ function onDirectoryFail(error) {
 }
 
 // fileUri = file:///emu/0/android/cache/something.jpg
-f
+
 function moveFile2(fileUri,dir,cnt) {
 	
 	var opdir = dir;
