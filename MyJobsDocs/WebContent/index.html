@@ -520,9 +520,8 @@ new sap.m.IconTabBar('DocumentsTabBar',
 	            								           	     ]
 	            								           	  
 
-	            									}).onAfterRendering = function(){
-	            										buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
-	            							 		};
+	            									})
+
 	            									]
 	            						           	  
 	            					    }),
@@ -531,15 +530,19 @@ new sap.m.IconTabBar('DocumentsTabBar',
 
 		})
 ],enableScrolling:true,
-    showNavButton: "{device>/isPhone}" });
-
+    showNavButton: "{device>/isPhone}" })
 var app = new sap.m.App();
 
 app.setInitialPage(page.getId());	
 	
 
 page.placeAt("body");
-
+page.addDelegate({
+	 onAfterRendering: function() {
+		 
+		 buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
+	  }
+	}, page);
 </script>
 </head>
 <body id="body" class="sapUiBody">

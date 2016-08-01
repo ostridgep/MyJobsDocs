@@ -203,19 +203,20 @@ if(dir!=AppDocDirectory+"/Global/Download/"){
 			}));
 }
 GlobalDirectory=dir;
-	try {
-		window.resolveLocalFileSystemURL(DeviceStorageDirectory+dir, function (dirEntry) {
-	    	
-	        var directoryReader = dirEntry.createReader();
-	          directoryReader.readEntries(docsGDReadSuccess, docsGDReadFail);
-	    });
-	}
-	catch(err) {
-	   //Not in Cordova
-	}
-	    
+try {
+	window.resolveLocalFileSystemURL(DeviceStorageDirectory+dir, function (dirEntry) {
+    	
+        var directoryReader = dirEntry.createReader();
+          directoryReader.readEntries(docsGDReadSuccess, docsGDReadFail);
+    });
+}
+catch(err) {
+   //Not in Cordova
+}
+    
 
 }
+
 function docsGDReadFail(error) {
     alert("Failed to list Photos contents: "+ error);
 }
