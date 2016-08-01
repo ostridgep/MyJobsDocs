@@ -529,8 +529,9 @@ new sap.m.IconTabBar('DocumentsTabBar',
    	                ]
 
 		})
-],enableScrolling:true,
-    showNavButton: "{device>/isPhone}" })
+],
+enableScrolling:true,
+showNavButton: "{device>/isPhone}" })
 var app = new sap.m.App();
 
 app.setInitialPage(page.getId());	
@@ -539,7 +540,7 @@ app.setInitialPage(page.getId());
 page.placeAt("body");
 page.addDelegate({
 	 onAfterRendering: function() {
-		 
+		 alert("Rendering Page")
 		 buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
 	  }
 	}, page);
