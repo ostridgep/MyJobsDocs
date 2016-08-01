@@ -132,12 +132,12 @@ function updateDocumemntsStatus(url,name,type,size,lastmod,status)
 		 function(){
 		
 				if(url=="*"){
-					alert("All Docs set to delete")
+				
 					BuildDocumentsTable()
 				}
 		 },
 		 function(error, statement){
-			 alert("Error: " + error.message + " when FormsResponses processing " + statement);
+			
 			opMessage("Error: " + error.message + " when FormsResponses processing " + statement);
 		 }        
 		);
@@ -153,7 +153,7 @@ function deleteAllDocs()
 		 function(){
 		
 				
-					alert("All Docs deleted")
+					
 				
 		 },
 		 function(error, statement){

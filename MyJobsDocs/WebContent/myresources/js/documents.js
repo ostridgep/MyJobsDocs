@@ -1127,7 +1127,7 @@ function downloadAll()
     	filesToDownload=data;
         var cnt = 0;
         st=getFormattedTime()
-       alert(filesToDownload.FILES.length)
+       
     	if(filesToDownload.FILES.length>0){
     		fileDownloadCnt=0;
     		
@@ -1143,10 +1143,10 @@ function downloadAll()
        
         
     }).success(function() { 
-    	alert("success")
+    	
     	})
     .error(function() { 
-    	alert("error"); 
+    	
 		oProgInd.setPercentValue(100);
     	oProgInd.setDisplayValue("100" + "%");
     })
@@ -1380,10 +1380,7 @@ function downloadAsset(fileName,dir) {
 function downloadAllAsset(fileName,dir) {
     var fileTransfer = new FileTransfer();
    
-        alert(  localStorage.getItem("DOCSERVER")+dir+"/" + fileName+"--"+cordova.file.externalApplicationStorageDirectory + dir + "/"+fileName)
-
-    //alert("About to start transfer " + localStorage.getItem("DOCSERVER") + fileName + " to " + cordova.file.externalApplicationStorageDirectory + dir + x[3]);
-    fileTransfer.download(localStorage.getItem("DOCSERVER")+dir+"/" + fileName, cordova.file.externalApplicationStorageDirectory + dir + "/"+fileName,
+     fileTransfer.download(localStorage.getItem("DOCSERVER")+dir+"/" + fileName, cordova.file.externalApplicationStorageDirectory + dir + "/"+fileName,
 		function (entry) {
     	opMessage("Downloading"+entry.fullPath)
 		   
