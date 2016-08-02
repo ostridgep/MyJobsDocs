@@ -3,6 +3,7 @@ var formMode="Forms"
 var closeFormName=""
 var selectedWebPage=''
 var mapLocationField
+var docDir="";
 currentPage=document.location.href;
 
 var theIFrameDoc=""

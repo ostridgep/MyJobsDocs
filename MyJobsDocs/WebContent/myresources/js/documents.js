@@ -27,6 +27,35 @@ var AppDocDirectory;
 		displayValue:"0%",
 		showValue:true
 	});
+	var formDocuments = new sap.m.Dialog("dlgDocuments",{
+	    title:"Documents",
+	    modal: true,
+	    contentWidth:"1em",
+	    buttons: [
+	 
+	  
+ 
+	                                new sap.m.Button( {
+	                                	icon:"sap-icon://sys-cancel",
+	                                    text: "Cancel",
+	                                    type: 	sap.m.ButtonType.Reject,
+	                                    tap: [ function(oEvt) {         
+	                                               
+	                                    	formDocuments.close()} ]   
+	                                })
+	                                ],                                
+	    content:[
+	buildDocumentList()
+	    
+	            ],
+	            beforeOpen:function(){
+	            	buildGlobalDownloads(AppDocDirectory+"/Global/Download/"+docDir)
+	            	//buildPhotoList();
+	            	
+	            },
+	           contentWidth:"90%",
+	        	contentHeight: "90%",
+	     })
 var formDownloadFiles = new sap.m.Dialog("dlgDownloadFiles",{
 		    title:"Download Files",
 		    modal: true,
@@ -95,7 +124,84 @@ var formDownloadFiles = new sap.m.Dialog("dlgDownloadFiles",{
 		            }
 		 })
 
+	function buildDocumentList(){
+		var asset_id=""
+		var asset_name=""
+		var asset_type=""
+		
+		
+		
+		var	docsTabBar  = new sap.m.IconTabBar('DocumentsTabBar',
+					{
+						expanded:'{device>/isNoPhone}',
 
+						select:[function(oEvt) {	
+							
+							  if(oEvt.getParameters().key=="Global"){
+								  //oDetailPage.setFooter(detailFooter)
+								  }
+							  if(oEvt.getParameters().key=="Download"){
+								  //oDetailPage.setFooter(detailFooter)
+								  }
+							  if(oEvt.getParameters().key=="Upload"){
+								  //oDetailPage.setFooter(detailFooter)
+								  }
+							  if(oEvt.getParameters().key=="Photos"){
+								  //oDetailPage.setFooter(materialFooter)
+								  }
+							  
+							}
+						],
+						
+						items: [
+
+		
+		    	                new sap.m.IconTabFilter( {
+		    	            	    key:'DocumentsGlobal',
+		    	            	    tooltip: 'Global Documents',
+		    	            	    icon: "sap-icon://documents",
+		    	            	       	                   content:[
+		    	            	       	        	               
+		    	            									new sap.m.Table("DocumentsGlobalTable",{
+		    	            										
+		    	            										mode: sap.m.ListMode.SingleSelectMaster,
+		    	        											selectionChange: function(evt){
+		    	        												
+			    	        												if(evt.getParameter("listItem").getCells()[2].getText()==""){
+			    	        													
+			    	        													buildGlobalDownloads(evt.getParameter("listItem").getCells()[5].getText())
+			    	        												}else{
+			    	        													showFile(evt.getParameter("listItem").getCells()[5].getText())
+			    	        												}
+		    	        													
+		    	        												
+		    	        										    },
+		    	            										columns:[
+		    	            										         new sap.m.Column({header: new sap.m.Label({text:""}),
+		    	            										        	 hAlign: 'Left',width: '5%', minScreenWidth : "" , demandPopin: false}),
+		    	            										         new sap.m.Column({header: new sap.m.Label({text:"Finename"}),
+		    	            										        	 hAlign: 'Left',width: '35%', minScreenWidth : "" , demandPopin: false}),
+		    	            										         new sap.m.Column({header: new sap.m.Label({text:"Type"}),
+		    	            										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),
+		    	            										         new sap.m.Column({header: new sap.m.Label({text:"Size"}),
+		    	            										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),	    	            										        	 
+		    	            										         new sap.m.Column({header: new sap.m.Label({text:"Last Modified"}),
+		    	            										        	 hAlign: 'Left',width: '30%',minScreenWidth : "" , demandPopin: true }) ,
+		    	            										        	 new sap.m.Column({header: new sap.m.Label({text:"Path"}),
+			    	            										        	 hAlign: 'Left',width: '0%', minScreenWidth : "" , visible:false, demandPopin: false})    
+		    	            								           	     ]
+		    	            								           	  
+
+		    	            									})
+		    	            									]
+		    	            						           	  
+		    	            					    }),
+    	            					    
+		       	                ]
+
+					});
+		return docsTabBar
+	}
 
 
 function win(r) {

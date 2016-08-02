@@ -84,7 +84,35 @@ var dispLog = 							new sap.m.Button("displayLog", {
 		displayLog()
 		  } ]
 })
-
+var tileContainer = new sap.m.TileContainer({
+	tiles:
+		[
+		new sap.m.StandardTile('RefDocs',
+				{
+			title:"Reference",
+			icon:"sap-icon://newspaper",
+			
+			press:[ function(){		
+				docDir="Templates"
+				formDocuments.open()
+				
+				}]
+		
+		}),
+		new sap.m.StandardTile('Templates',
+				{
+			title:"Templates",
+			icon:"sap-icon://order-status",
+			
+			press:[ function(){
+				docDir="Reference"
+				formDocuments.open()
+				}]
+		
+		})
+		]
+		
+});
 function addLogToDisplay(type, dt, message) {
 	var mess = new sap.m.MessagePopoverItem({
 		type: type,
@@ -397,79 +425,7 @@ function showMessageMiddle(msg){
 
 }
 
-var docTabs = new sap.m.IconTabBar('DocumentsTabBar',
-		{
-	expanded:'{device>/isNoPhone}',
-	expandable:false,
-	select:[function(oEvt) {	
-		
-		  if(oEvt.getParameters().key=="Global"){
-			  //oDetailPage.setFooter(detailFooter)
-			  }
-		  if(oEvt.getParameters().key=="Download"){
-			  //oDetailPage.setFooter(detailFooter)
-			  }
-		  if(oEvt.getParameters().key=="Upload"){
-			  //oDetailPage.setFooter(detailFooter)
-			  }
-		  if(oEvt.getParameters().key=="Photos"){
-			  //oDetailPage.setFooter(materialFooter)
-			  }
-		  
-		}
-	],
-	
-	items: [
 
-
-            new sap.m.IconTabFilter( {
-        	    key:'DocumentsGlobal',
-        	    tooltip: 'Global Documents',
-        	    icon: "sap-icon://documents",
-        	       	                   content:[
-        	       	        	               
-        									new sap.m.Table("DocumentsGlobalTable",{
-        										
-        										mode: sap.m.ListMode.SingleSelectMaster,
-    											selectionChange: function(evt){
-    												
-        												if(evt.getParameter("listItem").getCells()[2].getText()==""){
-        													
-        													buildGlobalDownloads(evt.getParameter("listItem").getCells()[5].getText())
-        													this.removeSelections()
-        												}else{
-        													
-        													showFile(evt.getParameter("listItem").getCells()[5].getText())
-        													this.removeSelections()
-        												}
-    													
-    												
-    										    },
-        										columns:[
-        										         new sap.m.Column({header: new sap.m.Label({text:""}),
-        										        	 hAlign: 'Left',width: '5%', minScreenWidth : "" , demandPopin: false}),
-        										         new sap.m.Column({header: new sap.m.Label({text:"Finename"}),
-        										        	 hAlign: 'Left',width: '35%', minScreenWidth : "" , demandPopin: false}),
-        										         new sap.m.Column({header: new sap.m.Label({text:"Type"}),
-        										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),
-        										         new sap.m.Column({header: new sap.m.Label({text:"Size"}),
-        										        	 hAlign: 'Left',width: '15%',minScreenWidth : "" , demandPopin: true}),	    	            										        	 
-        										         new sap.m.Column({header: new sap.m.Label({text:"Last Modified"}),
-        										        	 hAlign: 'Left',width: '30%',minScreenWidth : "" , demandPopin: true }) ,
-        										        	 new sap.m.Column({header: new sap.m.Label({text:"Path"}),
-            										        	 hAlign: 'Left',width: '0%', minScreenWidth : "" , visible:false, demandPopin: false})    
-        								           	     ]
-        								           	  
-
-        									})
-
-        									]
-        						           	  
-        					    }),
-
-               ]
-
-})
 
 var page  = new sap.m.Page('homePage',{
 	title:"MyJobs - Documents",  
@@ -512,7 +468,7 @@ var page  = new sap.m.Page('homePage',{
 			}),
     //content: [tileContainer,new sap.m.Label({text:"xxxxx"})]
 content: [
-docTabs
+tileContainer
 ],
 enableScrolling:true,
 showNavButton: "{device>/isPhone}" })
@@ -522,12 +478,7 @@ app.setInitialPage(page.getId());
 	
 
 page.placeAt("body");
-docTabs.addDelegate({
-	 onAfterRendering: function() {
-		 alert("Rendering Page")
-		 buildGlobalDownloads(AppDocDirectory+"/Global/Download/")
-	  }
-	}, docTabs);
+
 </script>
 </head>
 <body id="body" class="sapUiBody">
