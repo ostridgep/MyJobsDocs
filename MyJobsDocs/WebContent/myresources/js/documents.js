@@ -294,7 +294,7 @@ function buildGlobalDownloads(dir)
 	privatephotos = new Array()
 	var opTable = sap.ui.getCore().getElementById("DocumentsGlobalTable");
 	opTable.destroyItems();
-if(dir!=AppDocDirectory+"/Global/Download/"){
+if(dir!=AppDocDirectory+"/Global/Download/"+docDir){
 	
 		opTable.addItem (new sap.m.ColumnListItem({
 			cells : 
